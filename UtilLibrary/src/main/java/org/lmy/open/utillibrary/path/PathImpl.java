@@ -114,7 +114,7 @@ final class PathImpl implements IPath {
     private void createPath(String path) {
         if (!TextUtils.isEmpty(path)) {
             File file = new File(path);
-            if (!file.isDirectory()) {
+            if (!file.exists()) {
                 file.mkdirs();
             }
         } else {

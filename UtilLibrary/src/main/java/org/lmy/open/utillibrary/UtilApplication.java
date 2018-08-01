@@ -2,10 +2,9 @@ package org.lmy.open.utillibrary;
 
 import android.app.Application;
 import android.content.Context;
-import android.nfc.Tag;
 import android.util.Log;
 
-import org.lmy.open.utillibrary.imageload.LoadImageProxy;
+import org.lmy.open.utillibrary.imageload.LoadImageHelper;
 import org.lmy.open.utillibrary.path.PathUtil;
 
 /**********************************************************************
@@ -33,7 +32,7 @@ public class UtilApplication extends Application {
         super.onCreate();
         sInstance = this;
         PathUtil.getInstance().init(mContext);
-        LoadImageProxy.getInstance().init(mContext);
+        LoadImageHelper.getInstance().init(mContext);
     }
 
     @Override

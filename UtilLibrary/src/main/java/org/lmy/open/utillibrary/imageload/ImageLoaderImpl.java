@@ -2,22 +2,27 @@ package org.lmy.open.utillibrary.imageload;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
+import com.nostra13.universalimageloader.core.listener.ImageLoadingProgressListener;
+import com.nostra13.universalimageloader.core.listener.PauseOnScrollListener;
+
+import org.lmy.open.utillibrary.imageload.base.BaseLoadImageConfigure;
 
 /**********************************************************************
  *
  *
- * @类名 ImageLoaderHelper
+ * @类名 ImageLoaderImpl
  * @包名 org.lmy.open.utillibrary.ImageLoad
  * @author lmy
  * @创建日期 2018/3/5
  ***********************************************************************/
-final class ImageLoaderHelper implements ILoadImage, ImageLoadingListener {
+final class ImageLoaderImpl implements ILoadImage, ImageLoadingListener, ImageLoadingProgressListener {
     /**
      * imageloader
      */
@@ -29,10 +34,31 @@ final class ImageLoaderHelper implements ILoadImage, ImageLoadingListener {
     /**
      * 配置
      */
-    private LoadImageConfigure mConfigure;
+    private BaseLoadImageConfigure mConfigure;
 
-    public ImageLoaderHelper() {
+    ImageLoaderImpl() {
         mImageLoader = ImageLoader.getInstance();
+    }
+
+    @Override
+    public void loadImage(ImageView imageView, String url, int type, Listener listener) {
+        if (TextUtils.isEmpty(url)) {
+            return;
+        }
+        if (imageView == null) {
+            return;
+        }
+        if (!mImageLoader.isInited()) {
+            init(imageView.getContext());
+        }
+        mListener = listener;
+        mConfigure.addLoadUrl(url, type);
+        mImageLoader.displayImage(url, imageView, mConfigure.getOrCreateOptions(type), this);
+    }
+
+    @Override
+    public void setPauseLoadOnScroll(boolean pauseOnScroll, boolean pauseOnFling) {
+        new PauseOnScrollListener(mImageLoader, pauseOnScroll, pauseOnFling);
     }
 
     /**
@@ -40,19 +66,18 @@ final class ImageLoaderHelper implements ILoadImage, ImageLoadingListener {
      *
      * @param context 上下文
      */
+    @Override
     public void init(Context context) {
-        mConfigure = new LoadImageConfigure();
-        for (EnumImage image : EnumImage.values()) {
-            mConfigure.getCachePath(image);
-            mConfigure.getThumbCachePath(image);
-        }
-        mImageLoader.init(mConfigure.buildConfig(context));
+        init(context, null);
     }
 
     @Override
-    public void loadImage(ImageView imageView, String url, int type, Listener listener) {
-        mListener = listener;
-        mImageLoader.displayImage(url, imageView, mConfigure.getOrCreateOptions(type), this);
+    public void init(Context context, BaseLoadImageConfigure imageConfigure) {
+        if (imageConfigure == null) {
+            imageConfigure = new LoadImageConfigure();
+        }
+        mConfigure = imageConfigure;
+        mImageLoader.init(mConfigure.buildConfig(context));
     }
 
     @Override
@@ -80,6 +105,13 @@ final class ImageLoaderHelper implements ILoadImage, ImageLoadingListener {
     public void onLoadingCancelled(String imageUri, View view) {
         if (mListener != null) {
             mListener.onLoadingCancelled(imageUri, view);
+        }
+    }
+
+    @Override
+    public void onProgressUpdate(String imageUri, View view, int current, int total) {
+        if (mListener != null) {
+            mListener.onProgressUpdate(imageUri, view, current, total);
         }
     }
 }
