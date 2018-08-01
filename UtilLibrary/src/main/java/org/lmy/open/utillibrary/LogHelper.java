@@ -16,7 +16,7 @@ public class LogHelper {
     /**
      * 标签
      */
-    private static final String TAG = "WanAndroid-log";
+    private static final String TAG ="_log";
     /**
      * 分隔符
      */

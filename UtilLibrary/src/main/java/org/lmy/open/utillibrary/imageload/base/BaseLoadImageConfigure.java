@@ -43,11 +43,11 @@ public abstract class BaseLoadImageConfigure {
     /**
      * 路径集合
      */
-    protected Map<Integer, String> mPathMap;
+    private Map<Integer, String> mPathMap;
     /**
      * 加载图片集合
      */
-    protected Map<String, Integer> mLoadUrlMap;
+    private Map<String, Integer> mLoadUrlMap;
 
     /**
      * 选项集合

@@ -1,6 +1,7 @@
 package org.lmy.open.utillibrary.imageload;
 
 import android.graphics.Bitmap;
+import android.util.ArrayMap;
 
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
@@ -8,6 +9,7 @@ import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import org.lmy.open.utillibrary.MyResource;
 import org.lmy.open.utillibrary.UtilApplication;
 import org.lmy.open.utillibrary.imageload.base.BaseLoadImageConfigure;
+import org.lmy.open.utillibrary.path.PathUtil;
 
 import java.util.Map;
 
@@ -23,12 +25,14 @@ public final class LoadImageConfigure extends BaseLoadImageConfigure {
 
     @Override
     protected Map<Integer, String> getPathMap() {
-        return null;
+        Map<Integer, String> map = new ArrayMap<>();
+        map.put(0, "");
+        return map;
     }
 
     @Override
     public DisplayImageOptions getOrCreateOptions(int type) {
-        DisplayImageOptions  options = mOptionsMap.get(type);
+        DisplayImageOptions options = mOptionsMap.get(type);
         if (options != null) {
             return options;
         }
