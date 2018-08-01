@@ -12,6 +12,7 @@ import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 import com.nostra13.universalimageloader.core.decode.BaseImageDecoder;
 import com.nostra13.universalimageloader.core.download.BaseImageDownloader;
 
+import org.lmy.open.utillibrary.LogHelper;
 import org.lmy.open.utillibrary.imageload.cache.DiskCache;
 import org.lmy.open.utillibrary.imageload.cache.NameGenerator;
 import org.lmy.open.utillibrary.path.PathUtil;
@@ -41,6 +42,10 @@ public abstract class BaseLoadImageConfigure {
      */
     private static final int CORE_POOL_SIZE = Math.max(2, Math.min(CPU_COUNT - 1, 4));
     /**
+     * 选项集合
+     */
+    protected Map<Integer, DisplayImageOptions> mOptionsMap;
+    /**
      * 路径集合
      */
     private Map<Integer, String> mPathMap;
@@ -48,11 +53,6 @@ public abstract class BaseLoadImageConfigure {
      * 加载图片集合
      */
     private Map<String, Integer> mLoadUrlMap;
-
-    /**
-     * 选项集合
-     */
-    protected Map<Integer, DisplayImageOptions> mOptionsMap;
     /**
      * 文件名生成器
      */
@@ -61,6 +61,7 @@ public abstract class BaseLoadImageConfigure {
     public BaseLoadImageConfigure() {
         mOptionsMap = new ArrayMap<>();
         mPathMap = getPathMap();
+        LogHelper.d(getPathMap() + "");
         mLoadUrlMap = new ArrayMap<>();
         mFileNameGenerator = new NameGenerator();
     }

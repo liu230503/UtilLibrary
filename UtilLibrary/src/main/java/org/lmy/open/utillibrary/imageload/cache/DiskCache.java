@@ -1,12 +1,8 @@
 package org.lmy.open.utillibrary.imageload.cache;
 
-import android.util.Log;
-
 import com.nostra13.universalimageloader.cache.disc.impl.BaseDiskCache;
 import com.nostra13.universalimageloader.cache.disc.naming.FileNameGenerator;
 
-import org.lmy.open.utillibrary.LogHelper;
-import org.lmy.open.utillibrary.LoggerUtil;
 import org.lmy.open.utillibrary.imageload.base.BaseLoadImageConfigure;
 import org.lmy.open.utillibrary.path.PathUtil;
 
@@ -51,7 +47,6 @@ public final class DiskCache extends BaseDiskCache {
                 dir = reserveCacheDir;
             }
         }
-        LogHelper.d("liumy===" + "File:" + new File(dir, fileName).getAbsolutePath());
         return new File(dir, fileName);
     }
 }

@@ -6,7 +6,6 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 
-import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingProgressListener;
@@ -26,7 +25,7 @@ final class ImageLoaderImpl implements ILoadImage, ImageLoadingListener, ImageLo
     /**
      * imageloader
      */
-    private ImageLoader mImageLoader;
+    private CustomImageLoader mImageLoader;
     /**
      * 监听器
      */
@@ -37,7 +36,7 @@ final class ImageLoaderImpl implements ILoadImage, ImageLoadingListener, ImageLo
     private BaseLoadImageConfigure mConfigure;
 
     ImageLoaderImpl() {
-        mImageLoader = ImageLoader.getInstance();
+        mImageLoader = CustomImageLoader.getInstance();
     }
 
     @Override
