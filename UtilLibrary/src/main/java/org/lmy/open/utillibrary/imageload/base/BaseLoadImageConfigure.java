@@ -12,7 +12,6 @@ import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 import com.nostra13.universalimageloader.core.decode.BaseImageDecoder;
 import com.nostra13.universalimageloader.core.download.BaseImageDownloader;
 
-import org.lmy.open.utillibrary.LogHelper;
 import org.lmy.open.utillibrary.imageload.cache.DiskCache;
 import org.lmy.open.utillibrary.imageload.cache.NameGenerator;
 import org.lmy.open.utillibrary.path.PathUtil;
@@ -61,7 +60,6 @@ public abstract class BaseLoadImageConfigure {
     public BaseLoadImageConfigure() {
         mOptionsMap = new ArrayMap<>();
         mPathMap = getPathMap();
-        LogHelper.d(getPathMap() + "");
         mLoadUrlMap = new ArrayMap<>();
         mFileNameGenerator = new NameGenerator();
     }
@@ -182,7 +180,9 @@ public abstract class BaseLoadImageConfigure {
      * @return 路径
      */
     public String getCachePath(String url) {
-        File cacheFile = new File(PathUtil.getInstance().getImageCachePath() + mPathMap.get(mLoadUrlMap.get(url)));
+        String cachePath = mPathMap.get(mLoadUrlMap.get(url));
+        cachePath = TextUtils.isEmpty(cachePath) ? "" : cachePath;
+        File cacheFile = new File(PathUtil.getInstance().getImageCachePath() + cachePath);
         if (TextUtils.isEmpty(cacheFile.getAbsolutePath())) {
             return "";
         }

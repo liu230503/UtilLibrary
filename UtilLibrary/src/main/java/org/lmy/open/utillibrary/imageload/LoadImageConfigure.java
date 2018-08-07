@@ -1,6 +1,7 @@
 package org.lmy.open.utillibrary.imageload;
 
 import android.graphics.Bitmap;
+import android.os.Build;
 import android.util.ArrayMap;
 
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
@@ -9,7 +10,6 @@ import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import org.lmy.open.utillibrary.MyResource;
 import org.lmy.open.utillibrary.UtilApplication;
 import org.lmy.open.utillibrary.imageload.base.BaseLoadImageConfigure;
-import org.lmy.open.utillibrary.path.PathUtil;
 
 import java.util.Map;
 
@@ -21,13 +21,15 @@ import java.util.Map;
  * @author lmy
  * @创建日期 2018/3/5
  ***********************************************************************/
-public final class LoadImageConfigure extends BaseLoadImageConfigure {
+final class LoadImageConfigure extends BaseLoadImageConfigure {
 
     @Override
     protected Map<Integer, String> getPathMap() {
-        Map<Integer, String> map = new ArrayMap<>();
-        map.put(0, "");
-        return map;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            return new ArrayMap<>();
+        }else {
+            return new ArrayMap<Integer, String>();
+        }
     }
 
     @Override
