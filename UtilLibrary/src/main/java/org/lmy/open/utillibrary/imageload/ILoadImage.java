@@ -15,7 +15,7 @@ import org.lmy.open.utillibrary.imageload.base.BaseLoadImageConfigure;
  * @author lmy
  * @创建日期 2018/3/5
  ***********************************************************************/
-interface ILoadImage {
+public interface ILoadImage {
     /**
      * 加载图片
      *
@@ -49,7 +49,7 @@ interface ILoadImage {
      */
     void init(Context context, BaseLoadImageConfigure imageConfigure);
 
-    interface Listener {
+    public interface Listener {
         /**
          * 开始加载
          *
