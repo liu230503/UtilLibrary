@@ -3,6 +3,7 @@ package org.lmy.open.utillibrary;
 import android.app.Activity;
 import android.text.TextUtils;
 
+import java.util.Iterator;
 import java.util.Stack;
 
 /**********************************************************************
@@ -14,162 +15,114 @@ import java.util.Stack;
  * @创建日期 2018/2/28
  ***********************************************************************/
 public class ActivityManager {
-    /**
-     * activity栈
-     */
-    private static Stack<Activity> sActivityStack;
-    /**
-     * 单例对象
-     */
     private static ActivityManager sInstance;
-    /**
-     * tag
-     */
-    private static final String TAG = "ActivityManager";
-    /**
-     * 类
-     */
-    private static Class sClass = null;
+    private final Stack<Activity> mActivityStack;
 
-    /**
-     * 单例模式
-     *
-     * @return ActivityManager
-     */
+    public ActivityManager() {
+        mActivityStack = new Stack<>();
+    }
+
     public static ActivityManager getInstance() {
         if (sInstance == null) {
-            sInstance = new ActivityManager();
-            sActivityStack = new Stack<>();
+            synchronized (ActivityManager.class) {
+                if (sInstance == null) {
+                    sInstance = new ActivityManager();
+                }
+            }
         }
         return sInstance;
     }
 
-    /**
-     * 获取当前正在运行的Activity
-     *
-     * @return Activity
-     */
     public Activity getCurrentActivity() {
-        if (sActivityStack != null && !sActivityStack.isEmpty()) {
-            Activity activity = sActivityStack.lastElement();
-            return activity;
-        } else {
+        if (null == mActivityStack || mActivityStack.isEmpty()) {
             return null;
         }
-    }
-
-    /**
-     * 判断className是否当前的Activity
-     *
-     * @param className 类（路径�?
-     * @return 是否
-     */
-    public boolean isCurrentActivity(final String className) {
-        if ((!TextUtils.isEmpty(className)) && sActivityStack != null && !sActivityStack.isEmpty()) {
-            Activity activity = sActivityStack.lastElement();
-            if (activity != null && activity.getClass().getName().equals(className)) {
-                return true;
-            }
-            activity = null;
+        Activity activity = mActivityStack.peek();
+        if (activity.isDestroyed()) {
+            popActivity(activity);
+            return getCurrentActivity();
         }
-        return false;
+        return activity;
+
     }
 
-    /**
-     * 压站
-     *
-     * @param activity Activity
-     */
-    public void pushActivity(final Activity activity) {
-        if (sActivityStack == null) {
-            sActivityStack = new Stack<>();
+    public boolean isCurrentActivity(String className) {
+        if (TextUtils.isEmpty(className)) {
+            return false;
         }
-        sActivityStack.add(activity);
+        if (null == mActivityStack || mActivityStack.isEmpty()) {
+            return false;
+        }
+        Activity activity = mActivityStack.peek();
+        if (null == activity) {
+            return false;
+        }
+        return TextUtils.equals(className, activity.getClass().getName());
     }
 
-    /**
-     */
+    public void pushActivity(Activity activity) {
+        mActivityStack.push(activity);
+    }
+
     public void popActivity() {
-        if (sActivityStack != null && !sActivityStack.isEmpty()) {
-            Activity activity = sActivityStack.lastElement();
-            if (activity != null) {
-                activity.finish();
-                sActivityStack.remove(activity);
-            }
-            activity = null;
+        if (null == mActivityStack || mActivityStack.isEmpty()) {
+            return;
         }
+        popActivity(mActivityStack.peek());
     }
 
-    /**
-     * 将activity移除
-     *
-     * @param activity Activity
-     */
     public void popActivity(Activity activity) {
-        if (activity != null) {
-            activity.finish();
-            sActivityStack.remove(activity);
+        if (null == activity) {
+            return;
         }
+        activity.finish();
+        mActivityStack.remove(activity);
         activity = null;
     }
 
-    /**
-     * 弹出activity
-     *
-     * @param className 类名
-     */
     public void popActivity(String className) {
-        if ((!TextUtils.isEmpty(className)) && sActivityStack != null && !sActivityStack.isEmpty()) {
-            for (Activity activity : sActivityStack) {
-                if (activity != null && activity.getClass().getName().equals(className)) {
-                    popActivity(activity);
-                    break;
-                }
+        if (TextUtils.isEmpty(className)) {
+            return;
+        }
+        if (null == mActivityStack || mActivityStack.isEmpty()) {
+            return;
+        }
+        Iterator var2 = mActivityStack.iterator();
+        while (var2.hasNext()) {
+            Activity activity = (Activity) var2.next();
+            if (null == activity) {
+                continue;
+            }
+            if (TextUtils.equals(className, activity.getClass().getName())) {
+                popActivity(activity);
+                return;
             }
         }
-        className = null;
     }
 
-    /**
-     * 结束Activity
-     */
     public void popAllActivity() {
         while (true) {
-            Activity activity = getCurrentActivity();
-            if (activity == null) {
-                break;
+            Activity activity = this.getCurrentActivity();
+            if (null == activity) {
+                return;
             }
             popActivity(activity);
         }
     }
 
-    /**
-     * 结束除了clazz外的Activity
-     *
-     * @param clazz Class
-     */
-    @SuppressWarnings("unchecked")
-    public void popAllActivityExceptOne(final Class clazz) {
+    public void popAllActivityExceptOne(Class clazz) {
+        if (null == clazz) {
+            return;
+        }
         while (true) {
-            Activity activity = getCurrentActivity();
-            if (activity == null) {
-                break;
+            Activity activity = this.getCurrentActivity();
+            if (null == activity) {
+                continue;
             }
-            if (activity.getClass().equals(clazz)) {
-                break;
+            if (clazz.equals(activity.getClass())) {
+                continue;
             }
             popActivity(activity);
-        }
-    }
-
-    /**
-     * 设置最后一个类
-     *
-     * @param mclass 类
-     */
-    public void setLastActivity(Class mclass) {
-        if (mclass != null) {
-            sClass = mclass;
         }
     }
 }

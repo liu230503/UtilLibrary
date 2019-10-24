@@ -1,6 +1,5 @@
 package org.lmy.open.utillibrary;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
@@ -20,133 +19,78 @@ public final class PreferenceUtil {
      */
     private static SharedPreferences sPreference;
     /**
-     * 编辑器
-     */
-    private static Editor sEditor;
-    /**
      * 单例对象
      */
-    private static PreferenceUtil sInstance = null;
+    private static PreferenceUtil sPreferenceUtil = null;
+    /**
+     * 编辑器
+     */
+    private Editor mEditor;
 
-    @SuppressLint("CommitPrefEdits")
-    private PreferenceUtil(Context context) {
-        sPreference = PreferenceManager.getDefaultSharedPreferences(context);
-        sEditor = sPreference.edit();
+    private PreferenceUtil() {
     }
 
     /**
      * 单例方法
      *
-     * @param context 上下文
-     * @return 单例对象
+     * @return AnimationsFactory
      */
-    public static PreferenceUtil getInstance(Context context) {
-        if (sInstance == null) {
-            sInstance = new PreferenceUtil(context);
+    public static PreferenceUtil getInstance() {
+        if (null == sPreferenceUtil) {
+            synchronized (PreferenceUtil.class) {
+                if (null == sPreferenceUtil) {
+                    sPreferenceUtil = new PreferenceUtil();
+                }
+            }
         }
-        return sInstance;
+        return sPreferenceUtil;
     }
 
-    /**
-     * 取得存储器
-     *
-     * @return 存储器
-     */
     public static SharedPreferences getPreference() {
         return sPreference;
     }
 
-    /**
-     * 保存String类型
-     *
-     * @param key   键
-     * @param value 键
-     */
+    public void init(Context context) {
+        sPreference = PreferenceManager.getDefaultSharedPreferences(context);
+        mEditor = sPreference.edit();
+    }
+
     public void putString(String key, String value) {
-        sEditor.putString(key, value);
-        sEditor.commit();
+        mEditor.putString(key, value);
+        mEditor.commit();
     }
 
-    /**
-     * 保存布尔类型键值对
-     *
-     * @param key   键
-     * @param value 键
-     */
     public void putBoolean(String key, boolean value) {
-        sEditor.putBoolean(key, value);
-        sEditor.commit();
+        mEditor.putBoolean(key, value);
+        mEditor.commit();
     }
 
-    /**
-     * 获取String类型值
-     *
-     * @param key 键
-     * @return 值
-     */
     public String getString(String key) {
         return sPreference.getString(key, "");
     }
 
-    /**
-     * 获取布尔类型值
-     *
-     * @param key 键
-     * @return 值
-     */
     public boolean getBoolean(String key) {
         return sPreference.getBoolean(key, false);
     }
 
-    /**
-     * 获取带默认值的布尔类型值
-     *
-     * @param key   键
-     * @param value 默认值
-     * @return 值
-     */
     public boolean getBoolean(String key, boolean value) {
         return sPreference.getBoolean(key, value);
     }
 
-    /**
-     * 保存Long型数据
-     *
-     * @param key   键
-     * @param value 值
-     */
     public void putLong(String key, long value) {
-        sEditor.putLong(key, value);
-        sEditor.commit();
+        mEditor.putLong(key, value);
+        mEditor.commit();
     }
 
-    /**
-     * 获取Long型数据
-     *
-     * @param key 键
-     * @return 值
-     */
     public long getLong(String key) {
-        return sPreference.getLong(key, 0);
+        return sPreference.getLong(key, 0L);
     }
 
-    /**
-     * 保存整数类型数据
-     *
-     * @param key   键
-     * @param value 值
-     */
     public void putInt(String key, int value) {
-        sEditor.putInt(key, value);
-        sEditor.commit();
+        mEditor.putInt(key, value);
+        mEditor.commit();
     }
 
-    /**
-     * 获取整数类型数据
-     *
-     * @param key 键
-     * @return 值
-     */
     public int getInt(String key) {
         return sPreference.getInt(key, 0);
     }

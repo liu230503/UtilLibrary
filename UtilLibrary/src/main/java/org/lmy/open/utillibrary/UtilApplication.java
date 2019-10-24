@@ -70,10 +70,11 @@ public abstract class UtilApplication extends Application {
      */
     protected void initForMainProcess(Context context) {
         PathUtil.getInstance().init(context);
+        PreferenceUtil.getInstance().init(context);
         LoadImageHelper.getInstance().init(context);
         LogUtil.enableLog2File(true);
         LogUtil.enableLog2Logcat(true);
-        LogUtil.init();
+        LogUtil.init("Log");
         CrashHandler.getInstance().init();
     }
 

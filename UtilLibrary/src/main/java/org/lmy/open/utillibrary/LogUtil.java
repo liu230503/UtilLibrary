@@ -26,10 +26,6 @@ public final class LogUtil {
      */
     public static final String LOG_PRINT_FILE = "logconfig.printfile";
     /**
-     * 标签
-     */
-    private static final String TAG = "mxNavi-log";
-    /**
      * 分隔符
      */
     private static final String SPLIT = "====";
@@ -70,6 +66,10 @@ public final class LogUtil {
      */
     private static final int MAX_LOGIN_FILE_COUNT = 7;
     /**
+     * 标签
+     */
+    private static String TAG;
+    /**
      * 输出log到logcat
      */
     private static boolean sIsPrintToLogcat = true;
@@ -92,7 +92,7 @@ public final class LogUtil {
      * @param isEnable 状态
      */
     public static void enableLog2Logcat(boolean isEnable) {
-        PreferenceUtil.getInstance(UtilApplication.getInstance().getContext()).putBoolean(LOG_ENEABLE, isEnable);
+        PreferenceUtil.getInstance().putBoolean(LOG_ENEABLE, isEnable);
         sIsPrintToLogcat = isEnable;
     }
 
@@ -102,7 +102,7 @@ public final class LogUtil {
      * @param isEnable 状态
      */
     public static void enableLog2File(boolean isEnable) {
-        PreferenceUtil.getInstance(UtilApplication.getInstance().getContext()).putBoolean(LOG_PRINT_FILE, isEnable);
+        PreferenceUtil.getInstance().putBoolean(LOG_PRINT_FILE, isEnable);
         sIsPrintToFile = isEnable;
     }
 
@@ -211,7 +211,8 @@ public final class LogUtil {
     /**
      * 初始化LOG工具
      */
-    public static void init() {
+    public static void init(String defaultTag) {
+        TAG = defaultTag;
         sIsPrintToLogcat = enableLog2Logcat();
         sIsPrintToFile = enableLog2File();
         sHandlerThread = new HandlerThread(LogUtil.class.getName());
@@ -241,7 +242,7 @@ public final class LogUtil {
      * @return 状态
      */
     public static boolean enableLog2Logcat() {
-        return PreferenceUtil.getInstance(UtilApplication.getInstance().getContext()).getBoolean(LOG_ENEABLE, true);
+        return PreferenceUtil.getInstance().getBoolean(LOG_ENEABLE, true);
     }
 
     /**
@@ -250,7 +251,7 @@ public final class LogUtil {
      * @return 状态
      */
     public static boolean enableLog2File() {
-        return PreferenceUtil.getInstance(UtilApplication.getInstance().getContext()).getBoolean(LOG_PRINT_FILE, true);
+        return PreferenceUtil.getInstance().getBoolean(LOG_PRINT_FILE, true);
     }
 
     /**
